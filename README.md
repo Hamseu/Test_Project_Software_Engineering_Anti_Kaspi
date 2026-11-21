@@ -1,25 +1,25 @@
 # Test_Project_Software_Engineering_Anti_Kaspi
 
-## Description
-This is git repository for online shop web-api with front-end and back-end.
+## Description: 
+    This is git repository for online shop web-api with front-end and back-end.
 ---
 ## Frameworks:
-Django 6+
-Angular
+    Django 6+
+    Angular
 ---
 ## Goal: 
-Prototyping the app which could provide comfortable search for goods.
+    Prototyping the app which could provide comfortable search for goods.
 ---
 ## Structure:
-App is hardly linked to goods on kaspi, it doesn't fetch anything and every item is hardcoded to db. Backend side is made with django and connects to Angular frontend via REST. 
-Dev mode is on.
-Secure is off.
-shop_front_angular is angular place.
-shop_api and shop_back are parts of django.
+    App is hardly linked to goods on kaspi, it doesn't fetch anything and every item is hardcoded to db. Backend side is made with django and connects to Angular frontend via REST. 
+    Dev mode is on.
+    Secure is off.
+    shop_front_angular is angular place.
+    shop_api and shop_back are parts of django.
 ---
 ## Class structure:
-Categories <- Category <- product(Angular side)
-Product <-> Products -> Category <-> Categories
+    Categories <- Category <- product(Angular side)
+    Product <-> Products -> Category <-> Categories
 ---
 ## Classes technical details (Angular):
 Category: 
