@@ -1,18 +1,10 @@
-import { Component, signal, computed, } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import {Product} from '../models/product.model';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import allproducts from '../models/allproducts.json'
-import {Categories} from '../models/Categories.model'
-import {UserCard} from '../user-card/user-card';
-
-
-const categoryMap: Record<string, keyof Categories> = {
-  GraphicCards: 'GraphicCards',
-  Phones: 'Phones',
-  Furniture: 'Furniture',
-  Shoes: 'Shoes',
-};
+import { catchError, of, switchMap, tap } from 'rxjs';
+import { CatalogService } from '../services/catalog.service';
+import { Product } from '../models/product.model';
+import { UserCard } from '../user-card/user-card';
 
 @Component({
   selector: 'product-list',
@@ -21,27 +13,28 @@ const categoryMap: Record<string, keyof Categories> = {
   styleUrl: './product-list.css',
 })
 export class ProductList {
-     mimicDB = signal <Categories>(allproducts as Categories);
-     category = signal< string | null>(null);
-    
-   products = computed(() => {
-     const key = categoryMap[this.category() ?? ''];
-    return key ? this.mimicDB()[key] : [];
-     } 
-   );
+  private catalog = inject(CatalogService);
+  private destroyRef = inject(DestroyRef);
+  products = signal<Product[]>([]);
+  loading = signal(true);
+  error = signal(false);
+  private removed = new Set<string>();
 
-   constructor(private route: ActivatedRoute) {
-  this.route.paramMap.subscribe(params => {
-    this.category.set(params.get('category'));
-  });
-}
+  constructor() {
+    inject(ActivatedRoute).paramMap.pipe(
+      tap(() => { this.loading.set(true); this.error.set(false); }),
+      switchMap(params => this.catalog.products(params.get('category') ?? '').pipe(
+        catchError(() => { this.error.set(true); return of([]); }),
+      )),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(products => {
+      this.products.set(products.filter(product => !this.removed.has(product.id)));
+      this.loading.set(false);
+    });
+  }
 
-     itemDelete(id: string) {
-        const cat = this.category();
-        if (!cat) return;
-        const key = categoryMap[cat];
-        this.mimicDB.update(db => ({...db, [key]: db[key].filter(p => p.id !== id),
-  }));
-}
-
+  itemDelete(id: string) {
+    this.removed.add(id);
+    this.products.update(products => products.filter(product => product.id !== id));
+  }
 }

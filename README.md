@@ -8,14 +8,30 @@
     Angular
 ---
 ## Goal: 
-    Prototyping the app which could provide comfortable search for goods.
+    Prototyping an app for browsing goods by category.
+---
+## Acceptance criteria
+
+1. From the home page, a user can select a category returned by the API and see its products. If the list is empty, the page displays an empty-list message.
+2. Each product card displays its image, name, description, rating, and price in KZT. Selecting the product name follows its product link.
+3. Selecting a product's like button increases the displayed like count by one for that card. The count is kept in the current view and is not saved to the backend.
+4. Selecting a product's remove button asks for confirmation. Confirming removes that product from the current list; cancelling leaves it in the list. Refreshing reloads products from the API.
+5. The Django API provides product and category list and detail endpoints under `/api/`. A request to `/api/categories/<category_id>/products/` returns that category's products, or HTTP 404 if the category does not exist. The Angular catalog loads categories and products from these endpoints.
+
 ---
 ## Structure:
-    App is hardly linked to goods on kaspi, it doesn't fetch anything and every item is hardcoded to db. Backend side is made with django and connects to Angular frontend via REST. 
-    Dev mode is on.
-    Secure is off.
+    Product data is stored in PostgreSQL; Django provides it to Angular via REST.
     shop_front_angular is angular place.
     shop_api and shop_back are parts of django.
+---
+## Local setup
+
+Install Django, Django REST Framework, django-filter, and a PostgreSQL driver in a local Python environment. Configure PostgreSQL and set `DJANGO_SECRET_KEY`, `POSTGRES_DB`, `POSTGRES_USER`, and `POSTGRES_PASSWORD` as environment variables. Optional settings are `POSTGRES_HOST`, `POSTGRES_PORT`, `DJANGO_ALLOWED_HOSTS` (comma-separated), and `DJANGO_DEBUG` (`true` for local debug mode). Do not commit credentials. Apply migrations with `python manage.py migrate`, populate categories and products in the database, and start Django with `python manage.py runserver`. A staff superuser can manage catalog data at `/admin/`.
+
+In `shop_front_angular`, run `npm install` and `npm start`. The Angular development server proxies `/api/` requests to Django at `127.0.0.1:8000`. The old bundled JSON is not automatically imported into PostgreSQL. Run frontend tests with `npm test` and backend tests with `python manage.py test` using an appropriately configured test database.
+
+The existing database password and Django secret key were previously stored in source. Rotate them and assess any repository history containing them.
+
 ---
 ## Class structure:
     Categories <- Category <- product(Angular side)

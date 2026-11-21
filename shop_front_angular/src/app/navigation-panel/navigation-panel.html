@@ -1,8 +1,10 @@
-<nav>
-    <ul>
-    <li routerLinkActive = "activated"> <a [routerLink] = "['/productlist', 'GraphicCards']">Graphic Cards</a></li>
-    <li routerLinkActive = "activated"> <a [routerLink] = "['/productlist', 'Phones']" >Phones</a></li>
-    <li routerLinkActive = "activated"> <a [routerLink] = "['/productlist', 'Furniture']" >Furniture</a></li>
-    <li routerLinkActive = "activated"> <a [routerLink] = "['/productlist', 'Shoes']" >Shoes</a></li>
+<nav aria-label="Product categories">
+  @if (error()) {
+    <p role="alert">Unable to load categories. Please try again later.</p>
+  }
+  <ul>
+    @for (category of categories(); track category.name) {
+      <li routerLinkActive="activated"><a [routerLink]="['/productlist', category.name]">{{ category.name }}</a></li>
+    }
   </ul>
-</nav>  
+</nav>

@@ -1,12 +1,12 @@
-<p class = "empty">
-  @if (products().length == 0){
-  No products left, refresh the page
-  }
-</p>
-
-
-<div class = "grid-container">
-      @for (product of products(); track product.id) {
-          <user-card (deleteID) = "itemDelete($event)" [product]="product"></user-card>
+@if (loading()) {
+  <p class="empty" role="status">Loading products...</p>
+} @else if (error()) {
+  <p class="empty" role="alert">Unable to load products. Please try again later.</p>
+} @else if (products().length === 0) {
+  <p class="empty" role="status">No products in this category.</p>
+}
+<div class="grid-container">
+  @for (product of products(); track product.id) {
+    <user-card (deleteID)="itemDelete($event)" [product]="product"></user-card>
   }
 </div>

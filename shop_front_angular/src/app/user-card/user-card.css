@@ -7,16 +7,13 @@
   margin: 12px;
   overflow: hidden;
   padding: 4px;
-  height: 420px;
+  min-height: 420px;
 }
 
 div #LC{
   margin-left: -3px;
 }
 
-.card:hover{
-  transform: scale(1.1);
-}
 
 .imagein-card {
   width: 100%;
@@ -54,10 +51,9 @@ h6 {
 
 .share-buttons{
     display: flex;
-    position:relative;
-    margin-top: -4px;
+    flex-wrap: wrap;
+    margin-top: auto;
     margin-bottom: 12px;
-    left: 10%;
     gap: 8px;
     align-items: center;
 }

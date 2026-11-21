@@ -16,7 +16,7 @@ Work within the existing language, framework, directory structure, and naming co
 ## 2. Existing features and scope control
 
 - Inspect the actual implementation and tests before making changes.
-- Keep existing product details, links, and room db access.
+- Keep existing product details, links, and db access.
 - Implement only the requested feature or fix; avoid unrelated cleanup, sweeping renames, and broad refactors.
 - Prefer minimal, reviewable diffs over replacement of whole modules.
 - If requirements appear contradictory, identify the conflict and choose the smallest interpretation consistent.
@@ -50,8 +50,17 @@ Work within the existing language, framework, directory structure, and naming co
 - Never commit or install anything containing secrets. If a change appears to require a key or token, stop and report it instead of adding one.
 
 
-
-## 6. Mandatory workflow for every task
+## 6. Vitest testing policy (mandatory)
+* Use Vitest for unit and regression tests. Respect the project's existing test structure and conventions.
+* Always run the existing test suite using exactly npm test as the normal verification command.
+* If the tests cannot start because dependencies are missing or not installed, run npm install once, then retry npm test one * * additional time. Do not loop installation retries.
+* If tests execute and reveal failures caused by the change, fix the code and rerun npm test until the suite is green. Do not weaken * or delete a legitimate test to force a pass.
+* Every changed piece of logic must have focused tests, even if tests were not explicitly requested. Add regression tests for each fixed defect.
+* Keep tests deterministic and independent of network, system clock, external services, and test execution order. Inject or mock the current time as needed.
+* Do not claim that tests passed unless the command actually ran and its result was observed.
+* If tests cannot run after the single install-and-retry sequence, report the exact blocker and command output; do not invent a  green result.
+* 
+## 7. Mandatory workflow for every task
 
 1. **Inspect:** Read relevant code,`README.md`, `AGENTS.md`, package scripts, and existing Vitest tests. Identify existing behavior.
 2. **Baseline:** Run tests if there are any. Record any pre-existing failures separately. If there are no tests, offer to create them 
@@ -61,7 +70,7 @@ Work within the existing language, framework, directory structure, and naming co
 6. **Review:** Backend - frontend connection, UI feedback, responsive behavior, and whether the diff includes unnecessary changes.
 7. **Report:** Provide a concise change summary with file paths, rationale, and observed test evidence.
 
-## 7. Required final report format
+## 8. Required final report format
 
 At the end of a coding task, report:
 

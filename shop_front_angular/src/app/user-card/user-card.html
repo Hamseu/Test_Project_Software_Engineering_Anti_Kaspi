@@ -3,7 +3,11 @@
   />
         <h5><a [href] = "product.link" >{{product.label}}</a></h5>
         <p>{{product.description}}</p><br>
-        <app-rating [value] = "product.rating"></app-rating>
+        @if (product.rating !== null) {
+          <app-rating [value]="product.rating"></app-rating>
+        } @else {
+          <p>Rating unavailable</p>
+        }
         <h6>{{product.price | currency:'KZT ' }}</h6>
         <div class = "share-buttons">
             <button type = "button" (click)  = "removeItem()" class = "removeButton" aria-label = "Remove Product">X</button>

@@ -13,7 +13,9 @@ export class UserCard {
        @Input({ required: true }) product!: Product;
 
        onImageError(event: Event) {
-           (event.target as HTMLImageElement).src = 'Defaultim.png';
+           const image = event.target as HTMLImageElement;
+           if (image.getAttribute('src') === '/Defaultim.png') return;
+           image.src = '/Defaultim.png';
 }
 
       Tshare(){
@@ -24,9 +26,8 @@ export class UserCard {
       }
 
       Wshare(){
-        const text = encodeURIComponent(`${this.product.link}`);
-        const url = encodeURIComponent(`${this.product.link}`);
-        const Wlink = `https://wa.me/?text=Check out this product: ${this.product.link}`
+        const text = encodeURIComponent(`Check out this product: ${this.product.link}`);
+        const Wlink = `https://wa.me/?text=${text}`;
         window.open(Wlink, '_blank');
       }
 
