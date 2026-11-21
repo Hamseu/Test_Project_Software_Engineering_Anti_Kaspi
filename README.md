@@ -22,28 +22,27 @@
     Product <-> Products -> Category <-> Categories
 ---
 ## Classes technical details (Angular):
-Category: 
+    Category: 
        GraphicCards: Product[];
        Phones: Product[];
        Furniture: Product[];
        Shoes: Product[];
-Product: 
-{
-  id: string;
-  label: string;
-  description: string;
-  price: number;
-  link: string;
-  rating: number;
-  imageUrl: string;
-  likes: number;
-}
-
-Both are interfaces.
+    Product: 
+     {
+        id: string;
+        label: string;
+        description: string;
+        price: number;
+        link: string;
+        rating: number;
+        imageUrl: string;
+        likes: number;
+     }
+     - Both are interfaces.
 ---
 ## Django models structure:
-  class Category(models.Model):
-    name = models.CharField(max_length=100, primary_key=True)
+    class Category(models.Model):
+     name = models.CharField(max_length=100, primary_key=True)
 
     class Meta:
         db_table = 'categories'
@@ -51,16 +50,16 @@ Both are interfaces.
         return self.name
 
 
-  class Product(models.Model):
-    external_id = models.CharField(max_length=50)
-    name = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
-    price = models.DecimalField(max_digits=12, decimal_places=2)
-    link = models.TextField(blank=True)
-    rating = models.DecimalField(max_digits=3, decimal_places=2, null=True)
-    image_url = models.TextField(blank=True)
-    quantity = models.IntegerField(default=0)
-    is_active = models.BooleanField(default=True)
+    class Product(models.Model):
+     external_id = models.CharField(max_length=50)
+     name = models.CharField(max_length=255)
+     description = models.TextField(blank=True)
+     price = models.DecimalField(max_digits=12, decimal_places=2)
+     link = models.TextField(blank=True)
+     rating = models.DecimalField(max_digits=3, decimal_places=2, null=True)
+     image_url = models.TextField(blank=True)
+     quantity = models.IntegerField(default=0)
+     is_active = models.BooleanField(default=True)
 
     category_name = models.ForeignKey(
         Category,
@@ -75,26 +74,32 @@ Both are interfaces.
     class Meta:
         db_table = 'products'
 ### Serialization: 
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
+    class CategorySerializer(serializers.ModelSerializer):
+       class Meta:
         model = Category
         fields = ['name']
 
-class ProductSerializer(serializers.ModelSerializer):
-    category = serializers.StringRelatedField()
+    class ProductSerializer(serializers.ModelSerializer):
+      category = serializers.StringRelatedField()
 
-    class Meta:
+      class Meta:
         model = Product
         fields = "__all__"
 --- 
 ### Views of django:
 They are all created using generics:
+
 ProductsListAPIView - ListCreateAPIView
+
 ProductDetailAPIView = RetrieveUpdateDestroyAPIView
+
 CategoryListAPIView = ListCreateAPIView
+
 CategoryDetailAPIView = RetrieveUpdateDestroyAPIView:
+     
      lookup_url_kwarg = 'category_id'
      lookup_field = 'name'
+
 CategoryProductsAPIView = APIView :
 
     def get(self, request, category_id):
